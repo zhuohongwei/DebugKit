@@ -67,12 +67,13 @@ extension UIView {
         }
         
         if let _ = view as? UIScrollView {
-            if let _ = view.keyedLayer(key: &adjustedContentInsetLayerKey) {
+            
+            if let _ = view.keyedLayer(key: &adjustedContentInsetLayerKey), #available(iOS 11.0, *) {
                 ac.addAction(UIAlertAction(title: "Show Adjusted Content Inset \u{2714}", style: .default, handler: { _ in
                     view.hideAdjustedContentInset()
                 }))
                 
-            } else {
+            } else if #available(iOS 11.0, *) {
                 ac.addAction(UIAlertAction(title: "Show Adjusted Content Inset", style: .default, handler: { _ in
                     view.showAdjustedContentInset()
                 }))
@@ -90,12 +91,12 @@ extension UIView {
             }
         }
         
-        if let _ = view.keyedLayer(key: &safeAreaLayerKey) {
+        if let _ = view.keyedLayer(key: &safeAreaLayerKey), #available(iOS 11.0, *) {
             ac.addAction(UIAlertAction(title: "Show Safe Area \u{2714}", style: .default, handler: { _ in
                 view.hideSafeArea()
             }))
             
-        } else {
+        } else if #available(iOS 11.0, *) {
             ac.addAction(UIAlertAction(title: "Show Safe Area", style: .default, handler: { _ in
                 view.showSafeArea()
             }))
@@ -175,6 +176,7 @@ extension UIView {
     }
     
     private func showSafeArea() {
+        guard #available(iOS 11.0, *) else { return }
         let subLayer = createLayerWithKey(&safeAreaLayerKey, insets: safeAreaInsets)
         subLayer.borderWidth = 1
         subLayer.borderColor = UIColor.red.cgColor
@@ -185,6 +187,7 @@ extension UIView {
     }
     
     private func showAdjustedContentInset() {
+        guard #available(iOS 11.0, *) else { return }
         guard let scrollView = self as? UIScrollView else { return }
         let subLayer = createLayerWithKey(&adjustedContentInsetLayerKey, insets: scrollView.adjustedContentInset)
         subLayer.borderWidth = 1
